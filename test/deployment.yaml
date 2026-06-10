@@ -6,14 +6,14 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: app1
+      app: test
   template:
     metadata:
       labels:
-        app: app1
+        app: test
     spec:
       containers:
-      - name: app1
+      - name: test
         image: busybox
         ports:
         - containerPort: 80
