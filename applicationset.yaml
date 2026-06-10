@@ -1,20 +1,29 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: my-git-appset
+  name: matrix-appset
   namespace: argocd
 
 spec:
   generators:
-  - git:
-      repoURL: https://github.com/curioos/gitops-repo
-      revision: HEAD
-      directories:
-      - path: "*"
+  - matrix:
+      generators:
+      - git:
+          repoURL: https://github.com/curioos/gitops-repo
+          revision: HEAD
+          directories:
+          - path: "*"
+
+      - list:
+          elements:
+          - env: dev
+            namespace: dev
+          - env: prod
+            namespace: prod
 
   template:
     metadata:
-      name: '{{path.basename}}'
+      name: '{{path.basename}}-{{env}}'
     spec:
       project: default
       source:
@@ -23,8 +32,11 @@ spec:
         path: '{{path}}'
       destination:
         server: https://kubernetes.default.svc
-        namespace: default
+        namespace: '{{namespace}}'
       syncPolicy:
         automated:
           prune: true
           selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
+
