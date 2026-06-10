@@ -15,5 +15,6 @@ spec:
       containers:
       - name: test
         image: busybox
+        command: ["/bin/sh", "-c", "sleep 3600"]
         ports:
         - containerPort: 80
