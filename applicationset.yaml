@@ -25,7 +25,12 @@ spec:
     metadata:
       name: '{{path.basename}}-{{env}}'
     spec:
-      project: default
+      project: dev-project
+      ignoreDifferences:
+      - group: apps
+        kind: Deployment
+        jsonPointers:
+        - /spec/replicas
       source:
         repoURL: https://github.com/curioos/gitops-repo
         targetRevision: HEAD
